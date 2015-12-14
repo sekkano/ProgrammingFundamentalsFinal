@@ -1,0 +1,288 @@
+Main Problem Statement 
+Create an ASCII Roguelike game that displays "." as places to move.  Use "@" as the player 
+character and "#" as an unpassable obstacle.  The "@" must not go off the edge or be able to 
+go on the space where a "#" is at.  The player uses the UP, DOWN, LEFT, RIGHT keys to navigate 
+the grid.
+
+Problem Statement 1 Creating the grid:
+The game needs to display "." at each possible location of the grid using a 2D Array. Display "@" 
+at first position and "#" at second. (These will be used later and replaced with ".")
+Nouns:
+".", possible location of the grid
+
+Verbs:
+display
+
+Defining Diagram:
+INPUTS:
+N/A
+Processing:
+	set grid(GLOBAL) to a 2D array with "." as the variables
+		set first position to "@" and second position to "#"
+	display each position of the array and line break at end off index
+Output:
+	display grid with . . . . . . . . . . . . 
+			  . . . . . . . . . . . .  until end of array
+
+Solution Algorithm:
+DisplayGrid
+	Set grid to [["@", "#", "." , "."] Repeat "."  12 times
+		    [".", ".", ".", ".", "."]] Create new indexes 13 more times
+	FOR x WHILE less than grid length add 1 to x
+		output a line break
+		FOR y while less than grid length add 1 to y
+			output variable x and y and display grid location
+	ENDFOR
+display results of output to screen with @#. . . . . . . . until end of array
+END
+
+Test Plans:
+
+TEST PLAN 1:
+
+INPUTS:
+no inputs at this time
+EXPECTED RESULT: @#. . . . . . . . . . .
+		 . . . . . . . . . . . . .  until end of array 15 x 15 grid
+ACTUAL RESULT:  @#. . . . . . . . . . .
+		. . . . . . . . . . . . .  until end of array 15 x 15 grid
+
+Problem Statement 2 Creating a random spawn for "@":
+Create a random spawn point with the "@" symbol.  Must not go off the grid at be at the 
+correct spot on the grid.
+
+Nouns:
+random spawn, "@", not off grid, correct spot
+
+Verbs:
+print "@"
+
+Defining Diagram:
+No Input
+Processing:
+	create random number from the length of the array. - 1 for off by one errors
+	display "@" at the randomly selected X,Y coordinates
+	replace old position of "@" with "." 
+	redraw grid
+Output:
+	display . . . . . . . . . . .
+		. . . . . .@. . . . (Example if coordinates are 1,6)
+
+Solution Algorithm:
+randomSpawn
+	set location0 (GLOBAL) to 0;
+	set location1 (GLOBAL) to 0;
+	location0 = randomize grid array for "X"
+	location1 =  randomize grid array for "Y"
+	round location1 to a decimal number
+        round location0 to a decimal number
+	change grid array at the randomized location0 and location1 to "@".
+	set previous location "@" to "."
+END
+
+Test Plans:
+
+No Inputs
+EXPECTED RESULTS: Refreshing the page will move the "@" around the grid.  It will not go off 
+the grid.
+ACTUAL RESULTS: "@" does move around correctly but won't display at its original location.
+
+Solution Algorithm Revised:
+randomSpawn
+	set location0 (GLOBAL) to 0;
+	set location1 (GLOBAL) to 0;
+	location0 = randomize grid array for "X"
+	location1 =  randomize grid array for "Y"
+	round location0 to whole
+        round location1 to whole
+	change grid array at the randomized location0 and location1 to "@".
+	IF location0 and location1 = 0,0 THEN
+		Display "@" at 0,0 without setting its previous location to "."
+	ELSEIF createBarrier and randomSpawn are equal to each other THEN
+		randomize location0
+		randomize location1
+		round location0 to whole number
+		round location1 to whole number
+		change grid array at the new randomized location0 and location1 to "@"
+		set previous location "@" to "."
+	ELSE
+		set previous location "@" to "."
+END
+Test Plans:
+
+No Inputs
+EXPECTED RESULTS: Refreshing the page will move the "@" around the grid.  It will not go off 
+the grid and it will display "@" at 0,0.
+ACTUAL RESULTS: Works as intended.  And 0,0 displays properly.
+
+Problem Statement 3 Moving "@" around the screen
+
+Problem Statement:
+Move "@" around using arrow keys.  It should updated the position and revert old space back 
+to a ".".  It also cannot go off the grid.
+
+Nouns:
+move, arrow keys, update position, revert old space
+
+Verbs:
+update position, revert old space to "."
+
+Defining Diagram:
+Inputs:
+UP, DOWN, LEFT, RIGHT arrow keys
+Processing:
+	IF key down is UP
+		-1 from X, keep Y the same, Update grid position of "@" and old position with "."
+		check if new position is off the grid
+		check if new position is "#"
+	key down is DOWN
+		+ 1 to X, keep y the same, Update grid position of "@" and old position with "."
+		check if new position is off the grid
+		check if new position is "#"
+	key down is LEFT
+		-1 from Y, keep X the same, Update grid position of "@" and old position with "."
+		check if new position is off the grid
+		check if new position is "#"
+	key down is RIGHT
+		+ 1 to Y, keep X the same, Update grid position of "@" and old position with "."
+		check if new position is off the grid
+		check if new position is "#"
+Output:
+	grid displays new position of "@" and updates old position with "."
+	
+Solution Algorithm:
+PlayerMovement:
+	CASE OF keydown:
+		38: subtract 1 from X coordinate
+			IF new position is < -1 
+			     display to console "Can't go any further"
+		    	ELSEIF "@" position = barrier position
+			      draw "@" at old position
+			      display to console "You can't go any further."
+			ELSE
+            draw "@" new position
+		       	      draw "." at old position
+            redraw the grid
+		40: add 1 to X coordinate
+			IF new position is < -1 
+			     display to console "Can't go any further"
+		    	ELSEIF "@" position = barrier position
+			      draw "@" at old position
+			      display to console "You can't go any further."
+			ELSE
+
+            draw "@" new position
+		       	      draw "." at old position
+            redraw the grid
+		37: subtract 1 from Y coordinate
+			IF new position is < -1 
+			     display to console "Can't go any further"
+		    	ELSEIF "@" position = barrier position
+			      draw "@" at old position
+			      display to console "You can't go any further."
+			ELSE
+
+            draw "@" new position
+		       	      draw "." at old position
+            redraw the grid
+		39: add 1 to Y coordinate
+			IF new position is <  grid length 
+			     display to console "Can't go any further"
+		    	ELSEIF "@" position = barrier position
+			      draw "@" at old position
+			      display to console "You can't go any further."
+			ELSE
+            draw "@" new position
+		       	      draw "." at old position
+            redraw the grid
+		ENDCASE
+add event listener at the end of the program for keypress
+END
+
+Test Plans:
+
+Variables:
+X,Y
+Test Plan 1:
+      INPUT: UP
+      EXPECTED RESULT: "@" should move up the grid and not go off grid.
+      ACTUAL RESULT: "@" didn't go off grid and moved up.
+Test Plan 2:
+      INPUT: DOWN
+      EXPECTED RESULT: "@" should move down the grid and not go off grid.
+      ACTUAL RESULT: "@" didn't go off grid and moved down.
+Test Plan 3:
+      INPUT: LEFT
+      EXPECTED RESULT: "@" should move left on the grid and not go off grid.
+      ACTUAL RESULT: "@" didn't go off grid and moved left.
+Test Plan 4:
+      INPUT: RIGHT
+      EXPECTED RESULT: "@" should move right on the grid and not go off grid.
+      ACTUAL RESULT: "@" didn't go off grid and moved right.
+Test Plan 5:
+      INPUT: UP
+      EXPECTED RESULT: "@" not move if pushing UP into "#".
+      ACTUAL RESULT: "@" didn't move when pushing UP into "#".
+Test Plan 6:
+      INPUT: DOWN
+      EXPECTED RESULT: "@" not move if pushing DOWN into "#".
+      ACTUAL RESULT: "@" didn't move when pushing DOWN into "#".
+Test Plan 7:
+      INPUT: LEFT
+      EXPECTED RESULT: "@" not move if pushing LEFT into "#".
+      ACTUAL RESULT: "@" didn't move when pushing LEFT into "#".
+Test Plan 8:
+      INPUT: RIGHT
+      EXPECTED RESULT: "@" not move if pushing RIGHT into "#".
+      ACTUAL RESULT: "@" didn't move when pushing RIGHT into "#".
+
+Problem Statement 4 Displaying a boundary:
+
+Problem Statement:
+Display a "#" as a boundary.  If "@" runs into "#" from any angle it will not continue further.  If 
+"@" and "#" choose the same coordinates randomize the "@" to a new position.
+
+Nouns:
+"#", boundary, "@" runs into, will not continue
+
+Verbs:
+Display
+
+Defining Diagram:
+Inputs: Move "@" with keyboard
+Processing:
+	pick random spot on grid
+	Display "#" on random spot
+	IF "#" AND "@" are on same spot randomize "@" and draw new location
+	IF "@" runs into "#" display to console "You can't go any further."
+		Don't allow movement
+Output:
+	Display "#" randomly on the grid along with the "@" with ". . . . . . . #
+								  . . . . . @. ."
+Solution Algorithm:
+createBarrier
+	set barrierX to 0;
+	set barrierY to 0;
+	get random X from grid and store in barrierX
+	get random Y from grid and store in barrierY
+	round barrierX to whole number
+	round barrierY to whole number
+	IF barrierX and barrierY are equal to location[0][1](Global) THEN
+		display "#"
+	ELSE 
+		update the current "." with "#"
+	ENDIF
+END
+Test Plans:
+Variables:
+X,Y
+Test Plan 1:
+      INPUT:  N/A
+      EXPECTED RESULT: "#" should pick random spot on grid. Not go off grid and be able to 
+      		         display "#" at 0,1.
+      ACTUAL RESULT: "#" didn't go off grid, randomly spawned on grid and can display at 0,1.
+
+
+
+
+
